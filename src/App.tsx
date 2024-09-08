@@ -1,6 +1,6 @@
+import { Navigate, HashRouter, Route, Routes } from "react-router-dom";
 import Labs from "./Labs";
 import Kanbas from "./Kanbas";
-import { Navigate, HashRouter, Route, Routes } from "react-router-dom";
 
 export default function App() {
   return (
