@@ -9,7 +9,7 @@ export default function Labs() {
         <div>
             Michael Lappas
             <br />
-            CS5610 Web Development Section 1 Fall 2024
+            CS5610 Web Development Section 01 Fall 2024
             <br />
             Click <a href="https://github.com/mikejlappas/kanbas-react-web-app">here</a> to view the code repository.
             <br />
