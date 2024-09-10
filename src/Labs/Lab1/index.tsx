@@ -10,7 +10,9 @@ export default function Lab1() {
 
             <div id="wd-p-tag">
                 <h4>Paragraph Tag</h4>
-                <p id="wd-p-1">...</p>
+                <p id="wd-p-1">
+                    This is a paragraph. We often separate a long set of sentences with vertical spaces to make the text easier to read. Browsers ignore vertical white spaces and render all the text as one single set of sentences. To force the browser to add vertical spacing, wrap the paragraphs you want to separate with the paragraph tag
+                </p>
                 <p id="wd-p-2">
                     This is the first paragraph. The paragraph tag is used to format
                     vertical gaps between long pieces of text like this one.
@@ -100,11 +102,53 @@ export default function Lab1() {
                             <td>2/17/21</td>
                             <td>95</td>
                         </tr>
+                        <tr>
+                            <td>Q4</td>
+                            <td>JQuery</td>
+                            <td>2/24/21</td>
+                            <td>92</td>
+                        </tr>
+                        <tr>
+                            <td>Q5</td>
+                            <td>Bootstrap</td>
+                            <td>3/1/21</td>
+                            <td>96</td>
+                        </tr>
+                        <tr>
+                            <td>Q6</td>
+                            <td>AJAX</td>
+                            <td>3/8/21</td>
+                            <td>98</td>
+                        </tr>
+                        <tr>
+                            <td>Q7</td>
+                            <td>Databases</td>
+                            <td>3/16/21</td>
+                            <td>99</td>
+                        </tr>
+                        <tr>
+                            <td>Q8</td>
+                            <td>Mobile Web Development</td>
+                            <td>3/24/21</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>Q9</td>
+                            <td>Frameworks</td>
+                            <td>4/1/21</td>
+                            <td>88</td>
+                        </tr>
+                        <tr>
+                            <td>Q10</td>
+                            <td>React</td>
+                            <td>4/8/21</td>
+                            <td>91</td>
+                        </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colSpan={3}>Average</td>
-                            <td>90</td>
+                            <td>93</td>
                         </tr>
                     </tfoot>
                 </table>
