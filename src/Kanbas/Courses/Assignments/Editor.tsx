@@ -1,3 +1,7 @@
+function onButtonClick() {
+    window.location.href = "#/Kanbas/Courses/1234/Assignments/"
+}
+
 export default function AssignmentEditor() {
     return (
         <div id="wd-assignments-editor">
@@ -88,7 +92,7 @@ export default function AssignmentEditor() {
             </table>
             <hr />
             <div style={{ textAlign: 'right' }}>
-                <button>Cancel</button>{" "}<button>Save</button>
+                <button onClick={onButtonClick}>Cancel</button>{" "}<button onClick={onButtonClick}>Save</button>
             </div>
         </div>
     );
