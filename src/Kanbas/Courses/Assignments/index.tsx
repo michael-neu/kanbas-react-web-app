@@ -1,41 +1,88 @@
+import { BsGripVertical } from "react-icons/bs";
+import { BsPencilSquare } from "react-icons/bs";
+import { FaCaretDown } from "react-icons/fa";
+import { AssignmentsControlButtons } from "./AssignmentsControlButtons";
+import AssignmentControl from "./AssignmentControl";
+import AssignmentIcons from "./AssignmentIcons"
+
+interface Assignment {
+    title: string;
+    availabilityDate: string;
+    dueDate: string;
+    points: number;
+    link: string;
+}
+
+const assignments: Assignment[] = [
+    { title: 'A1', availabilityDate: 'May 6 at 12:00am', dueDate: 'May 13 at 11:59pm', points: 100, link: "#/Kanbas/Courses/CS1234/Assignments/A1" },
+    { title: 'A2', availabilityDate: 'May 13 at 12:00am', dueDate: 'May 20 at 11:59pm', points: 100, link: "#/Kanbas/Courses/CS1234/Assignments/A2" },
+    { title: 'A3', availabilityDate: 'May 20 at 12:00am', dueDate: 'May 27 at 11:59pm', points: 100, link: "#/Kanbas/Courses/CS1234/Assignments/A3" },
+];
+
+const AssignmentItem: React.FC<Assignment> = ({ title, availabilityDate, dueDate, points, link }) => {
+    return (
+        <li className="wd-lesson list-group-item p-3 ps-1" style={{ borderLeft: '4px solid green' }}>
+            <a
+                className="d-flex align-items-center flex-grow-1 text-decoration-none"
+                href={link}
+                style={{ color: 'inherit' }}
+            >
+                <div className="d-flex align-items-center flex-grow-1">
+                    <BsGripVertical className="me-2 fs-3" />
+                    <BsPencilSquare className="me-3" />
+                    <span className="d-inline-block">
+                        <b>{title}</b>
+                        <div style={{ marginLeft: '0', fontSize: '0.8em' }}>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <div style={{ color: 'red' }}>
+                                    <strong>Multiple Modules</strong>
+                                </div>
+                                <div style={{ marginLeft: '10px' }}>
+                                    | <strong>Not available until</strong> {availabilityDate}
+                                </div>
+                                <div style={{ marginLeft: '10px' }}>
+                                    |
+                                </div>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <div>
+                                    <strong>Due</strong> {dueDate}
+                                </div>
+                                <div style={{ marginLeft: '10px' }}>
+                                    |
+                                </div>
+                                <div style={{ marginLeft: '10px' }}>
+                                    {points} pts
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    <div style={{ marginLeft: "auto" }}>
+                        <AssignmentIcons />
+                    </div>
+                </div>
+            </a>
+        </li>
+    );
+};
+
 export default function Assignments() {
     return (
         <div id="wd-assignments">
-            <input id="wd-search-assignment" placeholder="Search for Assignments" />
-            {" "}
-            <button id="wd-add-assignment-group">+ Group</button>
-            {" "}
-            <button id="wd-add-assignment">+ Assignment</button>
-            <h3 id="wd-assignments-title">
-                ASSIGNMENTS 40% of Total <button>+</button>
-            </h3>
-            <ul id="wd-assignment-list">
-                <li className="wd-assignment-list-item">
-                    <a className="wd-assignment-link" href="#/Kanbas/Courses/1234/Assignments/123">A1 - ENV + HTML</a>
-                    <div>
-                        Multiple Modules | <b>Not available until</b> May 6 at 12:00 am |
+            <AssignmentControl />
+            <br />
+            <br />
+            <ul id="wd-modules" className="list-group rounded-0">
+                <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
+                    <div className="wd-title p-3 ps-2 bg-secondary" style={{ display: "flex" }}>
+                        <BsGripVertical className="me-2 fs-3" />
+                        <FaCaretDown className="me-1 fs-3" />
+                        ASSIGNMENTS
+                        <AssignmentsControlButtons />
                     </div>
-                    <div>
-                        <b>Due</b> May 13 at 11:59pm | 100 pts
-                    </div>
-                </li>
-                <li className="wd-assignment-list-item">
-                    <a className="wd-assignment-link" href="#/Kanbas/Courses/1234/Assignments/123">A2 - CSS + BOOTSTRAP</a>
-                    <div>
-                        Multiple Modules | <b>Not available until</b> May 13 at 12:00 am |
-                    </div>
-                    <div>
-                        <b>Due</b> May 20 at 11:59pm | 100 pts
-                    </div>
-                </li>
-                <li className="wd-assignment-list-item">
-                    <a className="wd-assignment-link" href="#/Kanbas/Courses/1234/Assignments/123">A3 - JAVASCRIPT + REACT</a>
-                    <div>
-                        Multiple Modules | <b>Not available until</b> May 20 at 12:00 am |
-                    </div>
-                    <div>
-                        <b>Due</b> May 27 at 11:59pm | 100 pts
-                    </div>
+                    {assignments.map((assignment, index) => (
+                        <AssignmentItem key={index} {...assignment} />
+                    ))}
                 </li>
             </ul>
         </div>

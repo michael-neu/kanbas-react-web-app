@@ -12,7 +12,7 @@ export default function Account() {
                     <td valign="top">
                         <AccountNavigation />
                     </td>
-                    <td valign="top">
+                    <td valign="top" style={{ paddingLeft: "20px" }}>
                         <h2>Account</h2>
                         <Routes>
                             <Route path="/" element={<Navigate to="/Kanbas/Account/Signin" />} />
