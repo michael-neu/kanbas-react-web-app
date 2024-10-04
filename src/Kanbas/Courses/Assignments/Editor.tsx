@@ -1,7 +1,23 @@
 import { FaXmark } from "react-icons/fa6";
+import { useParams } from "react-router";
+import { assignments } from "../../Database";
 
 export default function AssignmentEditor() {
-    const lastSlashIndex = window.location.href.lastIndexOf('/');
+    const { cid, aid } = useParams();
+
+    const assignmentArray = assignments.filter((assignment) => assignment.course === cid);
+    const assignment = assignmentArray.find((assignment) => assignment._id === aid);
+    if (!assignment) {
+        return (
+            <div id="wd-assignments-editor">
+                <div className="container">
+                    <h1>
+                        The specified assignment does not exist.
+                    </h1>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div id="wd-assignments-editor">
@@ -9,7 +25,7 @@ export default function AssignmentEditor() {
                 <div className="row mb-4">
                     <div className="col-13">
                         <label className="form-label">Assignment Name</label>
-                        <input id="wd-name" className="form-control" value={window.location.href.substring(lastSlashIndex + 1)} />
+                        <input id="wd-name" className="form-control" value={assignment.title} />
                     </div>
                 </div>
                 <div className="row mb-4">
@@ -35,7 +51,7 @@ The Kanbas application should include a link to navigate back to the landing pag
                         <label htmlFor="wd-points" className="col-form-label float-end">Points</label>
                     </div>
                     <div className="col">
-                        <input id="wd-points" type="number" className="form-control" value={100} />
+                        <input id="wd-points" type="number" className="form-control" value={assignment.points} />
                     </div>
                 </div>
                 <div className="row mb-4">
@@ -160,7 +176,7 @@ The Kanbas application should include a link to navigate back to the landing pag
                                         <label htmlFor="wd-due-date">
                                             <b>Due</b>
                                         </label>
-                                        <input id="wd-due-date" type="date" className="form-control" value="2024-05-13" />
+                                        <input id="wd-due-date" type="date" className="form-control" value="2024-06-06" />
                                     </div>
                                 </div>
                                 <div className="row mt-4">
@@ -169,14 +185,14 @@ The Kanbas application should include a link to navigate back to the landing pag
                                             <b>Available from</b>
                                         </label>
                                         <input id="wd-available-from" type="date" className="form-control"
-                                            value="2024-05-06" />
+                                            value={assignment.availabilityDate} />
                                     </div>
                                     <div className="col">
                                         <label htmlFor="wd-available-until">
                                             <b>Until</b>
                                         </label>
                                         <input id="wd-available-until" type="date" className="form-control"
-                                            value="2024-05-20" />
+                                            value={assignment.dueDate} />
                                     </div>
                                 </div>
                             </div>

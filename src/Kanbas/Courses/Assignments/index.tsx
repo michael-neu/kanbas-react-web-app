@@ -2,8 +2,10 @@ import { BsGripVertical } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaCaretDown } from "react-icons/fa";
 import { AssignmentsControlButtons } from "./AssignmentsControlButtons";
+import { useParams } from "react-router";
 import AssignmentControl from "./AssignmentControl";
 import AssignmentIcons from "./AssignmentIcons"
+import { assignments } from "../../Database";
 
 interface Assignment {
     title: string;
@@ -12,12 +14,6 @@ interface Assignment {
     points: number;
     link: string;
 }
-
-const assignments: Assignment[] = [
-    { title: 'A1', availabilityDate: 'May 6 at 12:00am', dueDate: 'May 13 at 11:59pm', points: 100, link: "#/Kanbas/Courses/CS1234/Assignments/A1" },
-    { title: 'A2', availabilityDate: 'May 13 at 12:00am', dueDate: 'May 20 at 11:59pm', points: 100, link: "#/Kanbas/Courses/CS1234/Assignments/A2" },
-    { title: 'A3', availabilityDate: 'May 20 at 12:00am', dueDate: 'May 27 at 11:59pm', points: 100, link: "#/Kanbas/Courses/CS1234/Assignments/A3" },
-];
 
 const AssignmentItem: React.FC<Assignment> = ({ title, availabilityDate, dueDate, points, link }) => {
     return (
@@ -38,7 +34,7 @@ const AssignmentItem: React.FC<Assignment> = ({ title, availabilityDate, dueDate
                                     <strong>Multiple Modules</strong>
                                 </div>
                                 <div style={{ marginLeft: '10px' }}>
-                                    | <strong>Not available until</strong> {availabilityDate}
+                                    | <strong style={{ marginLeft: '10px' }}>Not available until</strong> {availabilityDate}
                                 </div>
                                 <div style={{ marginLeft: '10px' }}>
                                     |
@@ -67,6 +63,9 @@ const AssignmentItem: React.FC<Assignment> = ({ title, availabilityDate, dueDate
 };
 
 export default function Assignments() {
+    const { cid } = useParams();
+    const assignmentArray = assignments.filter((assignment) => assignment.course === cid);
+
     return (
         <div id="wd-assignments">
             <AssignmentControl />
@@ -80,8 +79,8 @@ export default function Assignments() {
                         ASSIGNMENTS
                         <AssignmentsControlButtons />
                     </div>
-                    {assignments.map((assignment, index) => (
-                        <AssignmentItem key={index} {...assignment} />
+                    {assignmentArray.map((assignment, index) => (
+                        <AssignmentItem title={assignment.title} availabilityDate={assignment.availabilityDate} dueDate={assignment.dueDate} points={assignment.points} link={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} />
                     ))}
                 </li>
             </ul>
