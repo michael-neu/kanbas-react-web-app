@@ -2,10 +2,10 @@ import { BsGripVertical } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaCaretDown } from "react-icons/fa";
 import { AssignmentsControlButtons } from "./AssignmentsControlButtons";
+import { assignments } from "../../Database";
 import { useParams } from "react-router";
 import AssignmentControl from "./AssignmentControl";
 import AssignmentIcons from "./AssignmentIcons"
-import { assignments } from "../../Database";
 
 interface Assignment {
     title: string;
@@ -79,8 +79,8 @@ export default function Assignments() {
                         ASSIGNMENTS
                         <AssignmentsControlButtons />
                     </div>
-                    {assignmentArray.map((assignment, index) => (
-                        <AssignmentItem title={assignment.title} availabilityDate={assignment.availabilityDate} dueDate={assignment.dueDate} points={assignment.points} link={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} />
+                    {assignmentArray.map((assignment, _) => (
+                        <AssignmentItem title={assignment._id} availabilityDate={assignment.availabilityDate} dueDate={assignment.dueDate} points={assignment.points} link={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} />
                     ))}
                 </li>
             </ul>

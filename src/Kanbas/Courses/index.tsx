@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useLocation, useParams } from "react-router";
-import { FaAlignJustify, FaAngleRight } from "react-icons/fa6";
+import { FaAlignJustify } from "react-icons/fa6";
 import { courses } from "../Database";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
