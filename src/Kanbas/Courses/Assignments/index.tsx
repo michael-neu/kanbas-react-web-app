@@ -16,6 +16,15 @@ interface Assignment {
 }
 
 const AssignmentItem: React.FC<Assignment> = ({ title, availabilityDate, dueDate, points, link }) => {
+    function formatDate(dateString: string) {
+        const date = new Date(dateString);
+        const options: Intl.DateTimeFormatOptions = {
+            month: 'long',
+            day: 'numeric'
+        };
+        return date.toLocaleDateString('en-US', options);
+    }
+
     return (
         <li className="wd-lesson list-group-item p-3 ps-1" style={{ borderLeft: '4px solid green' }}>
             <a
@@ -34,7 +43,7 @@ const AssignmentItem: React.FC<Assignment> = ({ title, availabilityDate, dueDate
                                     <strong>Multiple Modules</strong>
                                 </div>
                                 <div style={{ marginLeft: '10px' }}>
-                                    | <strong style={{ marginLeft: '10px' }}>Not available until</strong> {availabilityDate}
+                                    | <strong style={{ marginLeft: '10px' }}>Not available until</strong> {formatDate(availabilityDate)}
                                 </div>
                                 <div style={{ marginLeft: '10px' }}>
                                     |
@@ -42,7 +51,7 @@ const AssignmentItem: React.FC<Assignment> = ({ title, availabilityDate, dueDate
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <div>
-                                    <strong>Due</strong> {dueDate}
+                                    <strong>Due</strong> {formatDate(dueDate)}
                                 </div>
                                 <div style={{ marginLeft: '10px' }}>
                                     |
