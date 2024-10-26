@@ -1,21 +1,35 @@
+import { Link } from "react-router-dom";
 import { FaXmark } from "react-icons/fa6";
 import { useParams } from "react-router";
-import { assignments } from "../../Database";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 
-export default function AssignmentEditor() {
+export default function AssignmentEditor({ upsertAssignment }:
+    { upsertAssignment: (assignment: any) => void; }) {
     const { cid, aid } = useParams();
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
-    const assignmentArray = assignments.filter((assignment) => assignment.course === cid);
-    const assignment = assignmentArray.find((assignment) => assignment._id === aid);
-    if (!assignment) {
+    const assignmentArray = assignments.filter((assignment: any) => assignment.course === cid);
+    const a = assignmentArray.find((assignment: any) => assignment._id === aid);
+
+    const randomThreeDigitNumber = Math.floor(100 + Math.random() * 900);
+    const [assignment] = useState({
+        _id: "A" + randomThreeDigitNumber,
+        title: "New Assignment",
+        course: cid,
+        description: "New Assignment Description",
+        availabilityDate: "2024-01-01",
+        dueDate: "2024-12-31",
+        points: 100
+    });
+
+    const [modifiedAssignment, setModifiedAssignment] = useState(aid === 'New' ? assignment : a);
+    if (modifiedAssignment === undefined) {
         return (
-            <div id="wd-assignments-editor">
-                <div className="container">
-                    <h1>
-                        The specified assignment does not exist.
-                    </h1>
-                </div>
+            <div id="wd-assignment-does-not-exist">
+                <h1>
+                    The specified assignment does not exist!
+                </h1>
             </div>
         )
     }
@@ -25,25 +39,25 @@ export default function AssignmentEditor() {
             <div className="container">
                 <div className="row mb-4">
                     <div className="col-13">
-                        <label className="form-label">Assignment Name</label>
-                        <input id="wd-name" className="form-control" value={assignment._id} />
+                        <label className="form-label">{modifiedAssignment.title}</label>
+                        <input id="wd-name" className="form-control" defaultValue={modifiedAssignment.title}
+                            onChange={(event) => {
+                                setModifiedAssignment((previousAssignment: any) => ({
+                                    ...previousAssignment,
+                                    title: event.target.value
+                                }))
+                            }} />
                     </div>
                 </div>
                 <div className="row mb-4">
                     <div className="col-12">
-                        <textarea id="wd-description" className="form-control" style={{ whiteSpace: 'pre-line' }} rows={12} cols={60}>
-                            {`The assignment is available online.
-
-Submit a link to the landing page of your Web application running on Netlify.
-
-The landing page should include the following:
-
- •  Your full name and section.
- •  Links to each of the lab assignments.
- •  Link to the Kanbas application.
- •  Links to all relevant source code repositories.
-
-The Kanbas application should include a link to navigate back to the landing page.`}
+                        <textarea id="wd-description" className="form-control" defaultValue={modifiedAssignment.description} style={{ whiteSpace: 'pre-line' }}
+                            rows={12} cols={60} onChange={(event) => {
+                                setModifiedAssignment((previousAssignment: any) => ({
+                                    ...previousAssignment,
+                                    description: event.target.value
+                                }))
+                            }}>
                         </textarea>
                     </div>
                 </div>
@@ -52,7 +66,13 @@ The Kanbas application should include a link to navigate back to the landing pag
                         <label htmlFor="wd-points" className="col-form-label float-end">Points</label>
                     </div>
                     <div className="col">
-                        <input id="wd-points" type="number" className="form-control" value={assignment.points} />
+                        <input id="wd-points" type="number" className="form-control" defaultValue={modifiedAssignment.points}
+                            onChange={(event) => {
+                                setModifiedAssignment((previousAssignment: any) => ({
+                                    ...previousAssignment,
+                                    points: event.target.value
+                                }))
+                            }} />
                     </div>
                 </div>
                 <div className="row mb-4">
@@ -61,7 +81,7 @@ The Kanbas application should include a link to navigate back to the landing pag
                     </div>
                     <div className="col">
                         <select id="wd-group" className="form-select">
-                            <option selected value="assignments">
+                            <option defaultValue="assignments" selected>
                                 ASSIGNMENTS
                             </option>
                             <option value="quizzes">
@@ -177,7 +197,13 @@ The Kanbas application should include a link to navigate back to the landing pag
                                         <label htmlFor="wd-due-date">
                                             <b>Due</b>
                                         </label>
-                                        <input id="wd-due-date" type="date" className="form-control" value={assignment.dueDate} />
+                                        <input id="wd-due-date" type="date" className="form-control" defaultValue={modifiedAssignment.dueDate}
+                                            onChange={(event) => {
+                                                setModifiedAssignment((previousAssignment: any) => ({
+                                                    ...previousAssignment,
+                                                    dueDate: event.target.value
+                                                }))
+                                            }} />
                                     </div>
                                 </div>
                                 <div className="row mt-4">
@@ -185,15 +211,25 @@ The Kanbas application should include a link to navigate back to the landing pag
                                         <label htmlFor="wd-available-from">
                                             <b>Available from</b>
                                         </label>
-                                        <input id="wd-available-from" type="date" className="form-control"
-                                            value={assignment.availabilityDate} />
+                                        <input id="wd-available-from" type="date" className="form-control" defaultValue={modifiedAssignment.availabilityDate}
+                                            onChange={(event) => {
+                                                setModifiedAssignment((previousAssignment: any) => ({
+                                                    ...previousAssignment,
+                                                    availabilityDate: event.target.value
+                                                }))
+                                            }} />
                                     </div>
                                     <div className="col">
                                         <label htmlFor="wd-available-until">
                                             <b>Until</b>
                                         </label>
-                                        <input id="wd-available-until" type="date" className="form-control"
-                                            value={assignment.dueDate} />
+                                        <input id="wd-available-until" type="date" className="form-control" defaultValue={modifiedAssignment.dueDate}
+                                            onChange={(event) => {
+                                                setModifiedAssignment((previousAssignment: any) => ({
+                                                    ...previousAssignment,
+                                                    dueDate: event.target.value
+                                                }))
+                                            }} />
                                     </div>
                                 </div>
                             </div>
@@ -204,7 +240,10 @@ The Kanbas application should include a link to navigate back to the landing pag
                     <hr />
                 </div>
                 <div className="mb-2">
-                    <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-danger float-end ms-2">
+                    <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-danger float-end ms-2"
+                        onClick={() => {
+                            upsertAssignment(modifiedAssignment)
+                        }}>
                         Save
                     </Link>
                     <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-secondary float-end">
