@@ -53,26 +53,29 @@ export default function Dashboard(
             )}
             {currentUser.role === 'FACULTY' && (
                 <>
-                    <h3>
-                        New Course
-                    </h3>
-                    <button
-                        id="wd-add-new-course-click"
-                        className="btn btn-primary float-end"
-                        onClick={() => {
-                            const courseId = new Date().getTime().toString()
+                    <div className="d-flex justify-content-between ">
+                        <h3 className="m-0">
+                            New Course
+                        </h3>
+                        <div>
+                            <button
+                                className="btn btn-warning me-2"
+                                onClick={updateCourse} id="wd-update-course-click">
+                                Update
+                            </button>
+                            <button
+                                id="wd-add-new-course-click"
+                                className="btn btn-primary float-end"
+                                onClick={() => {
+                                    const courseId = new Date().getTime().toString()
 
-                            addNewCourse(courseId);
-                            dispatch(addEnrollment({ courseId: courseId, userId: currentUser._id }));
-                        }}>
-                        Add
-                    </button>
-                    <button
-                        className="btn btn-warning float-end me-2"
-                        onClick={updateCourse} id="wd-update-course-click">
-                        Update
-                    </button>
-                    <br />
+                                    addNewCourse(courseId);
+                                    dispatch(addEnrollment({ courseId: courseId, userId: currentUser._id }));
+                                }}>
+                                Add
+                            </button>
+                        </div>
+                    </div>
                     <br />
                     <input
                         id="wd-course-name"
