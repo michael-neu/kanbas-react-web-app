@@ -1,26 +1,33 @@
 import { FaBell, FaCheckCircle, FaHome } from "react-icons/fa";
 import { FaBan, FaBullhorn, FaDownload, FaRightToBracket } from "react-icons/fa6";
 import { FaChartSimple } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 export default function CourseStatus() {
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+
     return (
         <div id="wd-course-status" style={{ width: "300px", marginLeft: "20px" }}>
-            <h2>Course Status</h2>
-            <div className="d-flex">
-                <div className="w-50 pe-1">
-                    <button className="btn btn-lg btn-secondary w-100 text-nowrap">
-                        <FaBan className="me-2 fs-5" />
-                        Unpublish
-                    </button>
-                </div>
-                <div className="w-50 pe-1">
-                    <button className="btn btn-lg btn-success w-100">
-                        <FaCheckCircle className="me-2 fs-5" />
-                        Publish
-                    </button>
-                </div>
-            </div>
-            <br />
+            {currentUser.role === 'FACULTY' && (
+                <>
+                    <h2>Course Status</h2>
+                    <div className="d-flex">
+                        <div className="w-50 pe-1">
+                            <button className="btn btn-lg btn-secondary w-100 text-nowrap">
+                                <FaBan className="me-2 fs-5" />
+                                Unpublish
+                            </button>
+                        </div>
+                        <div className="w-50 pe-1">
+                            <button className="btn btn-lg btn-success w-100">
+                                <FaCheckCircle className="me-2 fs-5" />
+                                Publish
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                </>
+            )}
             <div>
                 <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
                     <FaDownload className="me-2 fs-5" />
@@ -63,6 +70,6 @@ export default function CourseStatus() {
                     View Course Notifications
                 </button>
             </div>
-        </div>
+        </div >
     );
 }

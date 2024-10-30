@@ -1,13 +1,15 @@
+import { AssignmentsControlButtons } from "./AssignmentsControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaCaretDown } from "react-icons/fa";
-import { AssignmentsControlButtons } from "./AssignmentsControlButtons";
-import { assignments } from "../../Database";
+import { deleteAssignment } from "./reducer";
 import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 import AssignmentControl from "./AssignmentControl";
 import AssignmentIcons from "./AssignmentIcons"
 
 interface Assignment {
+    _id: string;
     title: string;
     availabilityDate: string;
     dueDate: string;
@@ -15,7 +17,9 @@ interface Assignment {
     link: string;
 }
 
-const AssignmentItem: React.FC<Assignment> = ({ title, availabilityDate, dueDate, points, link }) => {
+const AssignmentItem: React.FC<Assignment> = ({ _id, title, availabilityDate, dueDate, points, link }) => {
+    const dispatch = useDispatch();
+
     function formatDate(dateString: string) {
         const date = new Date(dateString);
         const options: Intl.DateTimeFormatOptions = {
@@ -63,7 +67,9 @@ const AssignmentItem: React.FC<Assignment> = ({ title, availabilityDate, dueDate
                         </div>
                     </span>
                     <div style={{ marginLeft: "auto" }}>
-                        <AssignmentIcons />
+                        <AssignmentIcons onDelete={() => {
+                            dispatch(deleteAssignment(_id))
+                        }} />
                     </div>
                 </div>
             </a>
@@ -73,7 +79,9 @@ const AssignmentItem: React.FC<Assignment> = ({ title, availabilityDate, dueDate
 
 export default function Assignments() {
     const { cid } = useParams();
-    const assignmentArray = assignments.filter((assignment) => assignment.course === cid);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const assignmentArray = assignments.filter((assignment: any) => assignment.course === cid);
 
     return (
         <div id="wd-assignments">
@@ -88,8 +96,11 @@ export default function Assignments() {
                         ASSIGNMENTS
                         <AssignmentsControlButtons />
                     </div>
-                    {assignmentArray.map((assignment, _) => (
-                        <AssignmentItem title={assignment._id} availabilityDate={assignment.availabilityDate} dueDate={assignment.dueDate} points={assignment.points} link={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} />
+                    {assignmentArray.map((assignment: any) => (
+                        currentUser.role === 'FACULTY' ?
+                            <AssignmentItem _id={assignment._id} title={assignment.title} availabilityDate={assignment.availabilityDate} dueDate={assignment.dueDate} points={assignment.points} link={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} />
+                            :
+                            <AssignmentItem _id={assignment._id} title={assignment.title} availabilityDate={assignment.availabilityDate} dueDate={assignment.dueDate} points={assignment.points} link={`#/Kanbas/Courses/${cid}/Assignments`} />
                     ))}
                 </li>
             </ul>
