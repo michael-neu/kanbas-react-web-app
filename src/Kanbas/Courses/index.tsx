@@ -8,6 +8,7 @@ import CoursesNavigation from "./Navigation";
 import Home from "./Home";
 import Modules from "./Modules";
 import PeopleTable from "./People/Table";
+import * as assignmentsClient from "../Courses/Assignments/client"
 
 export default function Courses({ courses }: { courses: any[]; }) {
     const { cid } = useParams();
@@ -15,7 +16,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
     const course = courses.find((course) => course._id === cid);
     const dispatch = useDispatch();
 
-    const handleUpsertAssignment = (assignment: any) => {
+    const handleUpsertAssignment = async (assignment: any) => {
+        await assignmentsClient.upsertAssignment(assignment)
         dispatch(upsertAssignment(assignment));
     };
 

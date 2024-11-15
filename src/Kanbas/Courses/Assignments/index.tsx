@@ -2,11 +2,13 @@ import { AssignmentsControlButtons } from "./AssignmentsControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaCaretDown } from "react-icons/fa";
-import { deleteAssignment } from "./reducer";
+import { deleteAssignment, setAssignments } from "./reducer";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import AssignmentControl from "./AssignmentControl";
 import AssignmentIcons from "./AssignmentIcons"
+import * as assignmentsClient from "./client"
 
 interface Assignment {
     _id: string;
@@ -67,7 +69,8 @@ const AssignmentItem: React.FC<Assignment> = ({ _id, title, availabilityDate, du
                         </div>
                     </span>
                     <div style={{ marginLeft: "auto" }}>
-                        <AssignmentIcons onDelete={() => {
+                        <AssignmentIcons onDelete={async () => {
+                            await assignmentsClient.deleteAssignment(_id);
                             dispatch(deleteAssignment(_id))
                         }} />
                     </div>
@@ -81,7 +84,14 @@ export default function Assignments() {
     const { cid } = useParams();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-    const assignmentArray = assignments.filter((assignment: any) => assignment.course === cid);
+
+    const dispatch = useDispatch();
+    const fetchAssignments = async () => {
+        dispatch(setAssignments(await assignmentsClient.fetchAssignmentsForCourse(cid as string)));
+    };
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
 
     return (
         <div id="wd-assignments">
@@ -96,7 +106,7 @@ export default function Assignments() {
                         ASSIGNMENTS
                         <AssignmentsControlButtons />
                     </div>
-                    {assignmentArray.map((assignment: any) => (
+                    {assignments.map((assignment: any) => (
                         currentUser.role === 'FACULTY' ?
                             <AssignmentItem _id={assignment._id} title={assignment.title} availabilityDate={assignment.availabilityDate} dueDate={assignment.dueDate} points={assignment.points} link={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} />
                             :

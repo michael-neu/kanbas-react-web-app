@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { addEnrollment, removeEnrollment } from "./reducer";
+import { addEnrollment, removeEnrollment, setEnrollments } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as dashboardClient from "./client"
 
 export default function Dashboard(
     { courses, course, setCourse, addNewCourse, deleteCourse, updateCourse }: {
@@ -12,15 +13,24 @@ export default function Dashboard(
         deleteCourse: (course: any) => void;
         updateCourse: () => void;
     }) {
-    const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
 
+    const [courseIdsEnrolled, setCourseIdsEnrolled]: any = useState([]);
+    const [coursesToShow, setCoursesToShow]: any = useState([])
     const [showAllCourses, setShowAllCourses] = useState(false);
-    const courseIdsEnrolled = enrollments
-        .filter((enrollment: any) => enrollment.user === currentUser._id)
-        .map((enrollment: any) => enrollment.course);
-    const coursesToShow = showAllCourses ? courses : courses.filter(course => courseIdsEnrolled.includes(course._id));
+
+    const dispatch = useDispatch();
+    const fetchEnrollments = async () => {
+        dispatch(setEnrollments(await dashboardClient.fetchEnrollments()));
+    };
+    useEffect(() => {
+        fetchEnrollments();
+        setCourseIdsEnrolled(enrollments
+            .filter((enrollment: any) => enrollment.user === currentUser._id)
+            .map((enrollment: any) => enrollment.course));
+        setCoursesToShow(showAllCourses ? courses : courses.filter(course => courseIdsEnrolled.includes(course._id)))
+    }, [courseIdsEnrolled, showAllCourses]);
 
     function truncateText(text: string, maxLength: number) {
         if (text.length > maxLength) {
@@ -37,7 +47,7 @@ export default function Dashboard(
             </h1>
             <hr />
             <h2 id="wd-dashboard-published">
-                Published Courses ({coursesToShow.length})
+                Published Courses ({showAllCourses ? courses.length : courseIdsEnrolled.length})
             </h2>
             <hr />
             {currentUser.role === 'STUDENT' && (
@@ -91,7 +101,7 @@ export default function Dashboard(
                 </>)}
             <div id="wd-dashboard-courses" className="row g-4">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
-                    {coursesToShow.map((course) => {
+                    {coursesToShow.map((course: any) => {
                         const isEnrolled = courseIdsEnrolled.includes(course._id);
 
                         return (
@@ -118,15 +128,17 @@ export default function Dashboard(
                                                 </button>
                                                 {currentUser.role === 'STUDENT' && (
                                                     isEnrolled ? (
-                                                        <button className="btn btn-danger" onClick={(event) => {
+                                                        <button className="btn btn-danger" onClick={async (event) => {
                                                             event.preventDefault()
+                                                            await dashboardClient.removeEnrollment(currentUser._id, course._id)
                                                             dispatch(removeEnrollment({ courseId: course._id, userId: currentUser._id }))
                                                         }}>
                                                             Unenroll
                                                         </button>
                                                     ) : (
-                                                        <button className="btn btn-success" onClick={(event) => {
+                                                        <button className="btn btn-success" onClick={async (event) => {
                                                             event.preventDefault()
+                                                            await dashboardClient.addEnrollment(currentUser._id, course._id);
                                                             dispatch(addEnrollment({ courseId: course._id, userId: currentUser._id }))
                                                         }}>
                                                             Enroll
@@ -160,6 +172,6 @@ export default function Dashboard(
                     })}
                 </div>
             </div >
-        </div >
+        </div>
     );
 }
