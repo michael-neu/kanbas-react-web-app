@@ -26,8 +26,12 @@ export default function Kanbas() {
     const [courses, setCourses] = useState<any[]>([]);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
 
-    const addNewCourse = async () => {
-        const newCourse = await userClient.createCourse(course);
+    const addNewCourse = async (courseId: string) => {
+        const newCourse = course
+        newCourse._id = courseId
+        console.log(newCourse)
+
+        await userClient.createCourse(newCourse);
 
         setCourses([...courses, { ...course, ...newCourse }]);
         setCourse(defaultCourse)
@@ -63,6 +67,11 @@ export default function Kanbas() {
     };
 
     const updateCourse = async () => {
+        if (course._id === "0") {
+            // None selected
+            return;
+        }
+
         await courseClient.updateCourse(course);
 
         setCourses(

@@ -21,16 +21,20 @@ export default function Dashboard(
     const [showAllCourses, setShowAllCourses] = useState(false);
 
     const dispatch = useDispatch();
-    const fetchEnrollments = async () => {
-        dispatch(setEnrollments(await dashboardClient.fetchEnrollments()));
-    };
     useEffect(() => {
+        const fetchEnrollments = async () => {
+            dispatch(setEnrollments(await dashboardClient.fetchEnrollments()))
+        };
         fetchEnrollments();
+    }, []);
+    useEffect(() => {
         setCourseIdsEnrolled(enrollments
             .filter((enrollment: any) => enrollment.user === currentUser._id)
             .map((enrollment: any) => enrollment.course));
+    }, [enrollments]);
+    useEffect(() => {
         setCoursesToShow(showAllCourses ? courses : courses.filter(course => courseIdsEnrolled.includes(course._id)))
-    }, [courseIdsEnrolled, showAllCourses]);
+    }, [courses, courseIdsEnrolled, showAllCourses]);
 
     function truncateText(text: string, maxLength: number) {
         if (text.length > maxLength) {
@@ -76,9 +80,10 @@ export default function Dashboard(
                             <button
                                 id="wd-add-new-course-click"
                                 className="btn btn-primary float-end"
-                                onClick={() => {
-                                    const courseId = new Date().getTime().toString()
+                                onClick={async (event) => {
+                                    event.preventDefault()
 
+                                    const courseId = new Date().getTime().toString()
                                     addNewCourse(courseId);
                                     dispatch(addEnrollment({ courseId: courseId, userId: currentUser._id }));
                                 }}>
@@ -130,6 +135,7 @@ export default function Dashboard(
                                                     isEnrolled ? (
                                                         <button className="btn btn-danger" onClick={async (event) => {
                                                             event.preventDefault()
+
                                                             await dashboardClient.removeEnrollment(currentUser._id, course._id)
                                                             dispatch(removeEnrollment({ courseId: course._id, userId: currentUser._id }))
                                                         }}>
@@ -138,6 +144,7 @@ export default function Dashboard(
                                                     ) : (
                                                         <button className="btn btn-success" onClick={async (event) => {
                                                             event.preventDefault()
+
                                                             await dashboardClient.addEnrollment(currentUser._id, course._id);
                                                             dispatch(addEnrollment({ courseId: course._id, userId: currentUser._id }))
                                                         }}>
@@ -150,13 +157,17 @@ export default function Dashboard(
                                                         <button id="wd-edit-course-click"
                                                             onClick={(event) => {
                                                                 event.preventDefault();
+
                                                                 setCourse(course)
                                                             }}
                                                             className="btn btn-warning me-2" style={{ marginLeft: 'auto' }} >
                                                             Edit
                                                         </button>
-                                                        <button onClick={(event) => {
+                                                        <button onClick={async (event) => {
                                                             event.preventDefault();
+
+                                                            await dashboardClient.removeEnrollment(currentUser._id, course._id)
+                                                            dispatch(removeEnrollment({ courseId: course._id, userId: currentUser._id }))
                                                             deleteCourse(course._id);
                                                         }} className="btn btn-danger" id="wd-delete-course-click">
                                                             Delete
