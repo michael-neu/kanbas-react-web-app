@@ -54,7 +54,7 @@ export default function Dashboard(
                 Published Courses ({showAllCourses ? courses.length : courseIdsEnrolled.length})
             </h2>
             <hr />
-            {currentUser.role === 'STUDENT' && (
+            {currentUser.role !== 'FACULTY' && (
                 <>
                     <button id="wd-enrollments-course-click" className="btn btn-primary float-end me-2"
                         onClick={() => setShowAllCourses(!showAllCourses)}>
@@ -131,7 +131,7 @@ export default function Dashboard(
                                                 <button className="btn btn-primary">
                                                     Go
                                                 </button>
-                                                {currentUser.role === 'STUDENT' && (
+                                                {currentUser.role !== 'FACULTY' && (
                                                     isEnrolled ? (
                                                         <button className="btn btn-danger" onClick={async (event) => {
                                                             event.preventDefault()

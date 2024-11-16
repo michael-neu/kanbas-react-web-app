@@ -29,7 +29,6 @@ export default function Kanbas() {
     const addNewCourse = async (courseId: string) => {
         const newCourse = course
         newCourse._id = courseId
-        console.log(newCourse)
 
         await userClient.createCourse(newCourse);
 
