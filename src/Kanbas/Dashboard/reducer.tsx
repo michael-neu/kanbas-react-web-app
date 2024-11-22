@@ -12,7 +12,7 @@ const enrollmentsSlice = createSlice({
         addEnrollment: (state, { payload }) => {
             const { courseId, userId } = payload;
             const newEnrollment = {
-                "_id": new Date().getTime().toString(),
+                "_id": courseId,
                 "user": userId,
                 "course": courseId
             };
@@ -26,8 +26,11 @@ const enrollmentsSlice = createSlice({
                 (e: any) => !(e.course === courseId && e.user === userId)
             );
         },
+        setEnrollments: (state, action) => {
+            state.enrollments = action.payload;
+        },
     },
 });
 
-export const { addEnrollment, removeEnrollment } = enrollmentsSlice.actions;
+export const { addEnrollment, removeEnrollment, setEnrollments } = enrollmentsSlice.actions;
 export default enrollmentsSlice.reducer;
