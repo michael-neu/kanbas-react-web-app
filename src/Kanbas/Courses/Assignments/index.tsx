@@ -107,7 +107,7 @@ export default function Assignments() {
                         <AssignmentsControlButtons />
                     </div>
                     {assignments.map((assignment: any) => (
-                        currentUser.role === 'FACULTY' ?
+                        (currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN') ?
                             <AssignmentItem _id={assignment._id} title={assignment.title} availabilityDate={assignment.availabilityDate} dueDate={assignment.dueDate} points={assignment.points} link={`#/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} />
                             :
                             <AssignmentItem _id={assignment._id} title={assignment.title} availabilityDate={assignment.availabilityDate} dueDate={assignment.dueDate} points={assignment.points} link={`#/Kanbas/Courses/${cid}/Assignments`} />

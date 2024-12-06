@@ -9,6 +9,12 @@ export const fetchEnrollments = async () => {
     return data;
 }
 
+export const fetchMyEnrollments = async (userId: string) => {
+    const { data } = await axios.get(`${ENROLLMENTS_API}/my/${userId}`);
+
+    return data;
+}
+
 export const addEnrollment = async (userId: string, courseId: string) => {
     const { data } = await axios.post(`${ENROLLMENTS_API}/add/${userId}/${courseId}`);
 
@@ -17,6 +23,12 @@ export const addEnrollment = async (userId: string, courseId: string) => {
 
 export const removeEnrollment = async (userId: string, courseId: string) => {
     const { data } = await axios.post(`${ENROLLMENTS_API}/remove/${userId}/${courseId}`);
+
+    return data;
+};
+
+export const removeCourseEnrollments = async (courseId: string) => {
+    const { data } = await axios.post(`${ENROLLMENTS_API}/remove/${courseId}`);
 
     return data;
 };

@@ -8,7 +8,7 @@ export default function CourseStatus() {
 
     return (
         <div id="wd-course-status" style={{ width: "300px", marginLeft: "20px" }}>
-            {currentUser.role === 'FACULTY' && (
+            {currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN' && (
                 <>
                     <h2>Course Status</h2>
                     <div className="d-flex">

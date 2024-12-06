@@ -1,35 +1,25 @@
 import { Link } from "react-router-dom";
 import { FaXmark } from "react-icons/fa6";
+import { retrieveAssignment } from "./client";
 import { useParams } from "react-router";
-import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function AssignmentEditor({ upsertAssignment }:
-    { upsertAssignment: (assignment: any) => void; }) {
+export default function AssignmentEditor({ upsertAssignment }: { upsertAssignment: (assignment: any) => void; }) {
     const { cid, aid } = useParams();
-    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
-    const assignmentArray = assignments.filter((assignment: any) => assignment.course === cid);
-    const a = assignmentArray.find((assignment: any) => assignment._id === aid);
+    const [assignment, setAssignment] = useState<any>(undefined);
+    const fetchAssignment = async () => {
+        const fetchedAssignment = await retrieveAssignment(aid as string);
+        setAssignment(fetchedAssignment);
+    };
+    useEffect(() => {
+        fetchAssignment();
+    }, []);
 
-    const randomThreeDigitNumber = Math.floor(100 + Math.random() * 900);
-    const [assignment] = useState({
-        _id: "A" + randomThreeDigitNumber,
-        title: "New Assignment",
-        course: cid,
-        description: "New Assignment Description",
-        availabilityDate: "2024-01-01",
-        dueDate: "2024-12-31",
-        points: 100
-    });
-
-    const [modifiedAssignment, setModifiedAssignment] = useState(aid === 'New' ? assignment : a);
-    if (modifiedAssignment === undefined) {
+    if (assignment === undefined) {
         return (
-            <div id="wd-assignment-does-not-exist">
-                <h1>
-                    The specified assignment does not exist!
-                </h1>
+            <div id="wd-assignments-editor-loading">
+                Fetching assignment...
             </div>
         )
     }
@@ -39,10 +29,10 @@ export default function AssignmentEditor({ upsertAssignment }:
             <div className="container">
                 <div className="row mb-4">
                     <div className="col-13">
-                        <label className="form-label">{modifiedAssignment.title}</label>
-                        <input id="wd-name" className="form-control" defaultValue={modifiedAssignment.title}
+                        <label className="form-label">{assignment.title}</label>
+                        <input id="wd-name" className="form-control" defaultValue={assignment.title}
                             onChange={(event) => {
-                                setModifiedAssignment((previousAssignment: any) => ({
+                                setAssignment((previousAssignment: any) => ({
                                     ...previousAssignment,
                                     title: event.target.value
                                 }))
@@ -51,9 +41,9 @@ export default function AssignmentEditor({ upsertAssignment }:
                 </div>
                 <div className="row mb-4">
                     <div className="col-12">
-                        <textarea id="wd-description" className="form-control" defaultValue={modifiedAssignment.description} style={{ whiteSpace: 'pre-line' }}
+                        <textarea id="wd-description" className="form-control" defaultValue={assignment.description} style={{ whiteSpace: 'pre-line' }}
                             rows={12} cols={60} onChange={(event) => {
-                                setModifiedAssignment((previousAssignment: any) => ({
+                                setAssignment((previousAssignment: any) => ({
                                     ...previousAssignment,
                                     description: event.target.value
                                 }))
@@ -66,9 +56,9 @@ export default function AssignmentEditor({ upsertAssignment }:
                         <label htmlFor="wd-points" className="col-form-label float-end">Points</label>
                     </div>
                     <div className="col">
-                        <input id="wd-points" type="number" className="form-control" defaultValue={modifiedAssignment.points}
+                        <input id="wd-points" type="number" className="form-control" defaultValue={assignment.points}
                             onChange={(event) => {
-                                setModifiedAssignment((previousAssignment: any) => ({
+                                setAssignment((previousAssignment: any) => ({
                                     ...previousAssignment,
                                     points: event.target.value
                                 }))
@@ -197,9 +187,9 @@ export default function AssignmentEditor({ upsertAssignment }:
                                         <label htmlFor="wd-due-date">
                                             <b>Due</b>
                                         </label>
-                                        <input id="wd-due-date" type="date" className="form-control" defaultValue={modifiedAssignment.dueDate}
+                                        <input id="wd-due-date" type="date" className="form-control" defaultValue={assignment.dueDate}
                                             onChange={(event) => {
-                                                setModifiedAssignment((previousAssignment: any) => ({
+                                                setAssignment((previousAssignment: any) => ({
                                                     ...previousAssignment,
                                                     dueDate: event.target.value
                                                 }))
@@ -211,9 +201,9 @@ export default function AssignmentEditor({ upsertAssignment }:
                                         <label htmlFor="wd-available-from">
                                             <b>Available from</b>
                                         </label>
-                                        <input id="wd-available-from" type="date" className="form-control" defaultValue={modifiedAssignment.availabilityDate}
+                                        <input id="wd-available-from" type="date" className="form-control" defaultValue={assignment.availabilityDate}
                                             onChange={(event) => {
-                                                setModifiedAssignment((previousAssignment: any) => ({
+                                                setAssignment((previousAssignment: any) => ({
                                                     ...previousAssignment,
                                                     availabilityDate: event.target.value
                                                 }))
@@ -223,9 +213,9 @@ export default function AssignmentEditor({ upsertAssignment }:
                                         <label htmlFor="wd-available-until">
                                             <b>Until</b>
                                         </label>
-                                        <input id="wd-available-until" type="date" className="form-control" defaultValue={modifiedAssignment.dueDate}
+                                        <input id="wd-available-until" type="date" className="form-control" defaultValue={assignment.dueDate}
                                             onChange={(event) => {
-                                                setModifiedAssignment((previousAssignment: any) => ({
+                                                setAssignment((previousAssignment: any) => ({
                                                     ...previousAssignment,
                                                     dueDate: event.target.value
                                                 }))
@@ -242,7 +232,7 @@ export default function AssignmentEditor({ upsertAssignment }:
                 <div className="mb-2">
                     <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-danger float-end ms-2"
                         onClick={() => {
-                            upsertAssignment(modifiedAssignment)
+                            upsertAssignment(assignment)
                         }}>
                         Save
                     </Link>

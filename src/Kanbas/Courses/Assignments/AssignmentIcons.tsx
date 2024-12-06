@@ -17,14 +17,14 @@ export default function AssignmentIcons({ onDelete }: { onDelete: () => void; })
     };
 
     return (
-
         <div className="d-flex align-items-center checkmark-container">
             <SpacedGreenCheckmark />
-            {currentUser.role === 'FACULTY' && <FaTrash
-                className="fs-4 me-3 text-danger"
-                onClick={handleDeleteClick}
-                style={{ cursor: 'pointer' }}
-            />}
+            {(currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN') &&
+                <FaTrash
+                    className="fs-4 me-3 text-danger"
+                    onClick={handleDeleteClick}
+                    style={{ cursor: 'pointer' }}
+                />}
             <IoEllipsisVertical className="fs-4" />
         </div>
     );
